@@ -2,6 +2,10 @@
 resource "aws_key_pair" "my_keypair" {
   key_name   = "terra-key-ec2"
   public_key = file("terra-key-ec2.pub")
+
+  tags = {
+    Environment = var.env
+  }
 }
 
 # VPC and SG
@@ -9,7 +13,7 @@ resource "aws_default_vpc" "my_vpc" {
 }
 
 resource "aws_security_group" "my_sg" {
-  name        = "automate-sg"
+  name        = "${var.env}-automate-sg"
   description = "Allow TLS inbound traffic and all outbound traffic"
   vpc_id      = aws_default_vpc.my_vpc.id #interpolation
 
@@ -44,6 +48,9 @@ resource "aws_security_group" "my_sg" {
     cidr_blocks = ["0.0.0.0/0"]
     description = "Allow all outbound traffic"
   }
+  tags = {
+    Environment = var.env
+  }
 }
 
 # ec2
@@ -65,5 +72,6 @@ resource "aws_instance" "my_ec2" {
 
   tags = {
     Name = each.key
+    Environment = var.env
   }
 }
