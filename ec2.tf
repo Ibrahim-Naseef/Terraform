@@ -51,7 +51,8 @@ resource "aws_instance" "my_ec2" {
   # count = 2
   for_each = tomap({
     "EC2 Instance 1" = "t3.small",
-    "EC2 Instance 2" = "t3.micro"
+    "EC2 Instance 2" = "t3.micro",
+    "EC2 Instance 3" = "t3.micro"
   })
   key_name        = aws_key_pair.my_keypair.key_name
   security_groups = [aws_security_group.my_sg.name]
