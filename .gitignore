@@ -1,0 +1,44 @@
+# ---- Terraform ----
+**/.terraform/*
+.terraform.lock.hcl.bak
+
+# State files must NEVER be committed. They contain resource IDs,
+# IP addresses and sometimes plaintext secrets.
+*.tfstate
+*.tfstate.*
+terraform.tfstate.d/
+
+# Crash logs
+crash.log
+crash.*.log
+
+# Variable files (may hold account IDs / secrets)
+*.tfvars
+*.tfvars.json
+!envs/*.tfvars.example
+
+# Plan output
+*.tfplan
+plan.out
+
+# Override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# CLI config
+.terraformrc
+terraform.rc
+
+# ---- Keys / credentials ----
+*.pem
+*.ppk
+terra-key*
+!terra-key*.pub.example
+.aws/
+
+# ---- Editors / OS ----
+.vscode/
+.idea/
+.DS_Store

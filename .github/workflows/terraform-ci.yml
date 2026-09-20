@@ -1,0 +1,45 @@
+name: Terraform CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  fmt-and-validate:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        stack:
+          - 01-basics/01-first-resource
+          - 01-basics/02-ec2-keypair-sg
+          - 01-basics/03-variables-outputs-locals
+          - 02-state-management/01-backend-bootstrap
+          - 03-modules/root
+          - 04-workspaces
+          - 05-eks
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.8
+
+      - name: terraform fmt
+        run: terraform fmt -check -recursive ${{ matrix.stack }}
+
+      - name: terraform init (no backend)
+        run: terraform -chdir=${{ matrix.stack }} init -backend=false
+
+      - name: terraform validate
+        run: terraform -chdir=${{ matrix.stack }} validate
+
+  tfsec:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Static security scan
+        uses: aquasecurity/tfsec-action@v1.0.0
+        with:
+          soft_fail: true
