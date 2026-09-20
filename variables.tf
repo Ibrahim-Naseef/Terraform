@@ -3,7 +3,7 @@ variable "aws_instance_type" {
 }
 
 variable "aws_root_storage_size" {
-  default = 15
+  default = 8
   type    = number
 }
 
@@ -21,5 +21,5 @@ variable "s3_bucket_name" {
 variable "env" {
   description = "Environment name"
   type        = string
-  default     = "prod"
+  default     = "dev"
 }

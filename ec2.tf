@@ -1,6 +1,6 @@
 # Key pair
 resource "aws_key_pair" "my_keypair" {
-  key_name   = "terra-key-ec2"
+  key_name   = "${var.env}-terra-key-ec2"
   public_key = file("terra-key-ec2.pub")
 }
 
@@ -9,7 +9,7 @@ resource "aws_default_vpc" "my_vpc" {
 }
 
 resource "aws_security_group" "my_sg" {
-  name        = "automate-sg"
+  name        = "${var.env}-automate-sg"
   description = "Allow TLS inbound traffic and all outbound traffic"
   vpc_id      = aws_default_vpc.my_vpc.id #interpolation
 
@@ -44,15 +44,18 @@ resource "aws_security_group" "my_sg" {
     cidr_blocks = ["0.0.0.0/0"]
     description = "Allow all outbound traffic"
   }
+  tags = {
+    Environment = var.env
+  }
 }
 
 # ec2
 resource "aws_instance" "my_ec2" {
   # count = 2
   for_each = tomap({
-    "EC2 Instance 1" = "t3.small",
-    "EC2 Instance 2" = "t3.micro",
-    "EC2 Instance 3" = "t3.micro"
+    # "EC2 Instance 1" = "t3.small",
+    # "EC2 Instance 2" = "t3.micro",
+    "EC2 Instance dev" = "t3.micro"
   })
   key_name        = aws_key_pair.my_keypair.key_name
   security_groups = [aws_security_group.my_sg.name]
@@ -66,5 +69,6 @@ resource "aws_instance" "my_ec2" {
 
   tags = {
     Name = each.key
+    Environment = var.env
   }
 }
