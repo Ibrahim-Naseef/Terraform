@@ -48,17 +48,22 @@ resource "aws_security_group" "my_sg" {
 
 # ec2
 resource "aws_instance" "my_ec2" {
+  # count = 2
+  for_each = tomap({
+    "EC2 Instance 1" = "t3.small",
+    "EC2 Instance 2" = "t3.micro"
+  })
   key_name        = aws_key_pair.my_keypair.key_name
   security_groups = [aws_security_group.my_sg.name]
-  instance_type   = var.aws_instance_type
+  instance_type   = each.value
   ami             = var.ec2_ami_id
 
   root_block_device {
-    volume_size = var.aws_root_storage_size
+    volume_size = var.env == "prod"? 20: var.aws_root_storage_size
     volume_type = "gp3"
   }
 
   tags = {
-    Name = "my-ec2-instance"
+    Name = each.key
   }
 }

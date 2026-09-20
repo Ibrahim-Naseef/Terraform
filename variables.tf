@@ -17,3 +17,9 @@ variable "s3_bucket_name" {
   type        = string
   default     = "terraform-bucket-coder"
 }
+
+variable "env" {
+  description = "Environment name"
+  type        = string
+  default     = "prod"
+}
