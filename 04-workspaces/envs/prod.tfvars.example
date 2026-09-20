@@ -1,0 +1,5 @@
+# Optional: an alternative to driving everything from local.env_config.
+# Copy to dev.tfvars and use with:  terraform plan -var-file=envs/dev.tfvars
+project  = "cyberz"
+ami_id   = "ami-01a00762f46d584a1"
+hash_key = "studentID"
